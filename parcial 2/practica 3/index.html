@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title> Volkswagen  - Compras Online</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f2f2f2; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <h1 style="color: #2c3e50; text-align: center;">Volkswagen </h1>
+        <h2 style="color: #16a085; text-align: center;">Compras Online</h2>
+        
+        <form action="URL_DE_TU_SERVIDOR_DE_PRUEBAS" method="post">
+            <fieldset style="border: 1px solid #16a085; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                <legend style="color: #16a085;">Información general del cliente</legend>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+                
+                <label for="apellido_paterno">Apellido Paterno:</label>
+                <input type="text" id="apellido_paterno" name="apellido_paterno" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+                
+                <label for="apellido_materno">Apellido Materno:</label>
+                <input type="text" id="apellido_materno" name="apellido_materno" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+                
+                <label for="usuario">Nombre de Usuario:</label>
+                <input type="text" id="usuario" name="usuario" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+                
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+                
+                <label for="fecha_registro">Fecha de Registro:</label>
+                <input type="date" id="fecha_registro" name="fecha_registro" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+            </fieldset>
+            
+            <fieldset style="border: 1px solid #16a085; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                <legend style="color: #16a085;">Datos para facturar</legend>
+                <label for="pais">País:</label>
+                <select id="pais" name="pais" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="mexico">México</option>
+                    <option value="canada">Canadá</option>
+                    <option value="reino_unido">Reino Unido</option>
+                </select><br>
+                
+                <label for="ciudad">Ciudad:</label>
+                <select id="ciudad" name="ciudad" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="san_luis_potosi">San Luis Potosí</option>
+                    <option value="monterrey">Monterrey</option>
+                    <option value="cd_valles">Cd. Valles</option>
+                </select><br>
+                
+                <label for="numero_casa">Número de Casa:</label>
+                <input type="number" id="numero_casa" name="numero_casa" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+                
+                <label for="calle">Calle:</label>
+                <input type="text" id="calle" name="calle" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+                
+                <label for="colonia">Colonia:</label>
+                <input type="text" id="colonia" name="colonia" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+                
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+                
+                <label for="rfc">R.F.C.:</label>
+                <input type="text" id="rfc" name="rfc" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+                
+                <label for="cp">C.P.:</label>
+                <input type="text" id="cp" name="cp" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+            </fieldset>
+            
+            <label style="display: block; margin-bottom: 10px;">
+                <input type="checkbox" name="terminos" required>
+                Acepto términos y condiciones
+            </label>
+            
+            <button type="submit" style="background-color: #16a085; color: #ffffff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Enviar</button>
+            <button type="reset" style="background-color: #e74c3c; color: #ffffff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Restablecer</button>
+        </form>
+    </div>
+</body>
+</html>
