@@ -1,0 +1,59 @@
+/* General */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* Encabezado */
+h1 {
+    text-align: center;
+    font-size: 2em;
+    color: #0066cc;
+    margin-bottom: 20px;
+}
+
+/* Tablas */
+#tabla {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#tabla th, #tabla td {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 8px;
+}
+
+#tabla th {
+    background-color: #0066cc;
+    color: white;
+    text-transform: uppercase;
+}
+
+#tabla tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#tabla tr:hover {
+    background-color: #e0f7fa;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #0066cc;
+    color: white;
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+
+footer address {
+    font-style: normal;
+}
