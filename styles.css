@@ -1,0 +1,197 @@
+/* Estilos generales */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: #e0e0e0; /* Blanco oscuro */
+    margin: 0;
+    padding: 0;
+    background-color: #000000; /* Negro */
+}
+
+/* Encabezado */
+header {
+    background-color: #ffffff; /* Blanco */
+    color: #000000; /* Negro */
+    text-align: center;
+    padding: 3rem 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 3rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+header h2, header h3 {
+    margin: 0.5rem 0;
+    font-weight: 300;
+}
+
+/* Navegación */
+nav {
+    background-color: #000000; /* Negro */
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 1rem;
+}
+
+nav ul li a {
+    color: #5e217d; /* Morado oscuro */
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+nav ul li a:hover {
+    background-color: #5e217d; /* Morado oscuro */
+    color: #ffffff;
+}
+
+/* Contenido principal */
+main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+section {
+    background-color: #1a1a1a; /* Negro oscuro */
+    margin-bottom: 2rem;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+section:hover {
+    transform: translateY(-5px);
+}
+
+h2 {
+    color: #5e217d; /* Morado oscuro */
+    border-bottom: 2px solid #5e217d; /* Morado oscuro */
+    padding-bottom: 0.5rem;
+    font-size: 1.8rem;
+}
+
+/* Misión y Visión */
+.mision-vision-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.mision, .vision {
+    flex: 1;
+    background-color: #333333; /* Gris oscuro */
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Prácticas */
+.practicas-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.parcial {
+    flex: 1;
+    background-color: #333333; /* Gris oscuro */
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.parcial h3 {
+    color: #5e217d; /* Morado oscuro */
+    font-size: 1.4rem;
+}
+
+.parcial ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.parcial ul li {
+    margin-bottom: 0.8rem;
+}
+
+.parcial ul li a {
+    color: #5e217d; /* Morado oscuro */
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #444444; /* Gris medio */
+    border-radius: 4px;
+}
+
+.parcial ul li a:hover {
+    background-color: #5e217d; /* Morado oscuro */
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Pie de página */
+footer {
+    background-color: #5e217d; /* Morado oscuro */
+    color: white;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .mision-vision-container, .practicas-container {
+        flex-direction: column;
+    }
+
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav ul li {
+        margin: 0.5rem 0;
+    }
+
+    header h1 {
+        font-size: 2.5rem;
+    }
+
+    section {
+        padding: 1.5rem;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+section {
+    animation: fadeIn 0.5s ease-in-out;
+}
