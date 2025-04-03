@@ -1,0 +1,108 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+/* Contenedor principal - establece el contexto de posicionamiento */
+.container {
+    position: relative; /* Establece el contexto para los elementos posicionados absolutamente dentro */
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+    border: 3px dashed #34495e;
+    background-color: #ecf0f1;
+    border-radius: 10px;
+}
+
+/* Estilos base para todas las cajas */
+.box {
+    width: 200px;
+    height: 200px;
+    position: absolute; /* Posicionamiento absoluto respecto al contenedor */
+    opacity: 0.9; /* Ligera transparencia para ver las superposiciones */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    font-size: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; /* Suave transición para efectos hover */
+}
+
+/* Efecto hover para todas las cajas */
+.box:hover {
+    opacity: 1;
+    transform: scale(1.05);
+    z-index: 10 !important; /* Al hacer hover, la caja sube al frente */
+}
+
+/* Estilos individuales para cada caja */
+.box1 {
+    background-color: #e74c3c; /* Rojo */
+    top: 50px;
+    left: 50px;
+    z-index: 3;
+}
+
+.box2 {
+    background-color: #3498db; /* Azul */
+    top: 120px;
+    left: 120px;
+    z-index: 2;
+}
+
+.box3 {
+    background-color: #2ecc71; /* Verde */
+    top: 190px;
+    left: 190px;
+    z-index: 1;
+}
+
+.box4 {
+    background-color: #9b59b6; /* Morado */
+    top: 260px;
+    left: 50px;
+    z-index: 4; /* Esta será la caja superior inicialmente */
+}
+
+.box5 {
+    background-color: #f39c12; /* Naranja */
+    top: 50px;
+    left: 260px;
+    z-index: 0; /* Esta será la caja inferior inicialmente */
+}
+
+
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .container {
+        width: 300px;
+        height: 500px;
+    }
+    
+    .box {
+        width: 150px;
+        height: 150px;
+        font-size: 16px;
+    }
+    
+    .box1 { top: 20px; left: 20px; }
+    .box2 { top: 80px; left: 80px; }
+    .box3 { top: 140px; left: 140px; }
+    .box4 { top: 200px; left: 20px; }
+    .box5 { top: 20px; left: 170px; }
+}
