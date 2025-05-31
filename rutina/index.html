@@ -9,6 +9,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, deleteDoc, onSnapshot, doc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        window.firebase = { initializeApp, getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, getFirestore, collection, addDoc, deleteDoc, onSnapshot, doc, query };
+    </script>
     <style>
         body { font-family: 'Inter', sans-serif; transition: background-color 0.3s ease, color 0.3s ease; }
 
@@ -93,6 +100,20 @@
         .bg-input-field { background-color: var(--bg-primary); } /* for input fields */
         .border-input-field { border-color: var(--border-color); } /* for input fields */
         .placeholder-theme-secondary::placeholder { color: var(--text-secondary); }
+
+        /* Loading spinner styles */
+        .loader {
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="light-theme bg-theme-primary text-theme-primary">
@@ -116,6 +137,12 @@
         </nav>
 
         <main>
+            <div id="loading-overlay" class="fixed inset-0 bg-theme-primary bg-opacity-90 flex flex-col items-center justify-center z-50 hidden">
+                <div class="loader"></div>
+                <p class="text-theme-primary mt-4 text-lg">Cargando datos...</p>
+                <p class="text-theme-secondary text-sm mt-2">Esto puede tomar unos segundos.</p>
+            </div>
+
             <div id="view-weekly">
                  <div class="text-center mb-8 p-6 bg-theme-card rounded-2xl shadow-sm border border-theme-default">
                     <h2 class="text-2xl font-bold text-theme-primary mb-2">Tu Semana de Entrenamiento</h2>
@@ -294,8 +321,23 @@
         </main>
     </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
+<script type="module">
+document.addEventListener('DOMContentLoaded', async () => {
+    const { initializeApp, getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, getFirestore, collection, addDoc, deleteDoc, onSnapshot, doc, query } = window.firebase;
+
+    // Global Firebase instances
+    let app;
+    let db;
+    let auth;
+    let userId;
+    let isAuthReady = false;
+
+    // Ensure __app_id and __firebase_config are available
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+    const loadingOverlay = document.getElementById('loading-overlay');
+    loadingOverlay.classList.remove('hidden');
 
     const data = {
         routines: {
@@ -319,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
             data: [4.0, 5.0, 6.0, 7.0, 8.0, 8.5, 5.0, 4.0],
             notes: ['Calentamiento', 'Intensidad Creciente', 'Ritmo Moderado', 'Ritmo Exigente', 'Ritmo Fuerte', 'Último Empujón', 'Enfriamiento', 'Fin']
         },
-        progressEntries: JSON.parse(localStorage.getItem('fitnessProgressEntries')) || []
+        progressEntries: [] // This will be populated by Firestore
     };
 
     const views = {
@@ -361,6 +403,87 @@ document.addEventListener('DOMContentLoaded', () => {
     let cardioChartInstance = null;
     let progressChartInstance = null;
     let activeWeeklyDayCard = null;
+
+    async function initializeFirebase() {
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            // Authenticate
+            if (typeof __initial_auth_token !== 'undefined') {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+
+            userId = auth.currentUser?.uid || crypto.randomUUID();
+            console.log("Firebase initialized and user authenticated:", userId);
+            isAuthReady = true;
+
+            // Start listening to Firestore data once authenticated
+            setupFirestoreListener();
+            loadingOverlay.classList.add('hidden'); // Hide loading overlay once data starts loading
+        } catch (error) {
+            console.error("Error initializing Firebase or authenticating:", error);
+            loadingOverlay.innerHTML = `<p class="text-theme-danger text-lg">Error al cargar la aplicación. Por favor, inténtalo de nuevo.</p><p class="text-theme-secondary text-sm mt-2">${error.message}</p>`;
+            loadingOverlay.classList.remove('hidden');
+        }
+    }
+
+    function setupFirestoreListener() {
+        if (!isAuthReady || !db || !userId) {
+            console.warn("Firestore listener not ready: Auth or DB not initialized.");
+            return;
+        }
+        const progressCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/progressEntries`);
+        const q = query(progressCollectionRef);
+
+        onSnapshot(q, (snapshot) => {
+            data.progressEntries = []; // Clear existing data
+            snapshot.forEach((doc) => {
+                data.progressEntries.push({ id: doc.id, ...doc.data() });
+            });
+            console.log("Progress entries updated from Firestore:", data.progressEntries);
+            // Re-render UI with new data
+            renderProgressTable();
+            renderProgressChart();
+            renderProgressSummary();
+        }, (error) => {
+            console.error("Error fetching progress entries:", error);
+            // Optionally display error message to user
+        });
+    }
+
+    async function addProgressEntryToFirestore(entry) {
+        if (!isAuthReady || !db || !userId) {
+            console.error("Firestore not ready for adding data.");
+            alert("Error: La base de datos no está lista. Inténtalo de nuevo más tarde.");
+            return;
+        }
+        try {
+            await addDoc(collection(db, `artifacts/${appId}/users/${userId}/progressEntries`), entry);
+            console.log("Document successfully written!");
+        } catch (error) {
+            console.error("Error adding document:", error);
+            alert("Error al añadir el progreso: " + error.message);
+        }
+    }
+
+    async function deleteProgressEntryFromFirestore(docId) {
+        if (!isAuthReady || !db || !userId) {
+            console.error("Firestore not ready for deleting data.");
+            alert("Error: La base de datos no está lista. Inténtalo de nuevo más tarde.");
+            return;
+        }
+        try {
+            await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/progressEntries`, docId));
+            console.log("Document successfully deleted!");
+        } catch (error) {
+            console.error("Error deleting document:", error);
+            alert("Error al eliminar el progreso: " + error.message);
+        }
+    }
 
     function switchView(viewName) {
         if (activeView === viewName) return;
@@ -566,7 +689,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-theme-secondary">${entry.didCardio ? 'Sí' : 'No'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-theme-secondary">${entry.didTraining ? 'Sí' : 'No'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button class="text-theme-danger hover:text-theme-danger-dark" data-index="${index}">Eliminar</button>
+                    <button class="text-theme-danger hover:text-theme-danger" data-id="${entry.id}">Eliminar</button>
                 </td>
             `;
             progressTableBody.appendChild(row);
@@ -574,18 +697,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         progressTableBody.querySelectorAll('button').forEach(button => {
             button.addEventListener('click', (e) => {
-                const indexToDelete = parseInt(e.target.dataset.index);
-                deleteProgressEntry(indexToDelete);
+                const docIdToDelete = e.target.dataset.id;
+                deleteProgressEntryFromFirestore(docIdToDelete);
             });
         });
-    }
-
-    function deleteProgressEntry(index) {
-        data.progressEntries.splice(index, 1);
-        localStorage.setItem('fitnessProgressEntries', JSON.stringify(data.progressEntries));
-        renderProgressTable();
-        renderProgressChart();
-        renderProgressSummary();
     }
 
     function renderProgressChart() {
@@ -666,10 +781,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const bodyWeightEntries = data.progressEntries.filter(entry => entry.type === 'bodyWeight').sort((a, b) => new Date(a.date) - new Date(b.date));
         const benchPressEntries = data.progressEntries.filter(entry => entry.type === 'benchPress').sort((a, b) => new Date(a.date) - new Date(b.date));
 
+        const uniqueDates = new Set();
         data.progressEntries.forEach(entry => {
-            if (entry.didCardio) totalCardioDays++;
-            if (entry.didTraining) totalTrainingDays++;
+            uniqueDates.add(entry.date);
         });
+
+        // Calculate total cardio/training days based on distinct dates where they were done
+        const cardioDates = new Set();
+        const trainingDates = new Set();
+        data.progressEntries.forEach(entry => {
+            if (entry.didCardio) cardioDates.add(entry.date);
+            if (entry.didTraining) trainingDates.add(entry.date);
+        });
+        totalCardioDays = cardioDates.size;
+        totalTrainingDays = trainingDates.size;
 
         totalCardioDaysSpan.textContent = totalCardioDays;
         totalTrainingDaysSpan.textContent = totalTrainingDays;
@@ -737,13 +862,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const didTraining = didTrainingInput.checked;
 
         if (date && metric && !isNaN(value)) {
-            data.progressEntries.push({ date, type: metric, value, didCardio, didTraining });
-            localStorage.setItem('fitnessProgressEntries', JSON.stringify(data.progressEntries));
+            addProgressEntryToFirestore({ date, type: metric, value, didCardio, didTraining });
             progressForm.reset();
             progressDateInput.valueAsDate = new Date(); // Reset date to today after submission
-            renderProgressTable();
-            renderProgressChart();
-            renderProgressSummary();
         } else {
             alert('Por favor, completa todos los campos para añadir el progreso.');
         }
@@ -771,6 +892,8 @@ document.addEventListener('DOMContentLoaded', () => {
         switchView('weekly');
         document.querySelector('.day-card').click();
         progressDateInput.valueAsDate = new Date(); // Set default date to today
+
+        initializeFirebase(); // Start Firebase initialization
     }
     
     init();
