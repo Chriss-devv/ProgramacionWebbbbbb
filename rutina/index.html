@@ -10,23 +10,105 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .tab-active { border-color: #f59e0b; color: #f59e0b; background-color: #fffbeb; }
-        .tab-inactive { border-color: transparent; color: #57534e; }
-        .day-card-active { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); border-color: #f59e0b; }
-        .toggle-checkbox:checked + .toggle-label { background-color: #f59e0b; }
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s ease, color 0.3s ease; }
+
+        /* Light Theme (Default / Normal) */
+        body.light-theme {
+            --bg-primary: #f8fafc; /* stone-50 */
+            --text-primary: #1f2937; /* gray-800 */
+            --text-secondary: #4b5563; /* gray-600 */
+            --accent-color: #2563eb; /* blue-600 */
+            --accent-bg-light: #eff6ff; /* blue-50 */
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb; /* gray-200 */
+            --chart-line: #2563eb;
+            --chart-fill: rgba(37, 99, 235, 0.2);
+            --chart-point: #1e40af; /* blue-800 */
+            --chart-grid: #f3f4f6; /* gray-100 */
+            --tooltip-bg: #1f2937;
+            --tooltip-title: #bfdbfe; /* blue-200 */
+            --tooltip-body: #d1d5db; /* gray-300 */
+            --button-bg: #2563eb;
+            --button-text: #ffffff;
+            --button-hover-bg: #1d4ed8; /* blue-700 */
+            --danger-color: #dc2626; /* red-600 */
+            --success-color: #16a34a; /* green-600 */
+        }
+
+        /* Dark Theme (Cyberpunk) */
+        body.dark-theme {
+            --bg-primary: #0a0a0a; /* gray-950 */
+            --text-primary: #d8b4fe; /* purple-300 */
+            --text-secondary: #a78bfa; /* violet-400 */
+            --accent-color: #a855f7; /* purple-500 (new) */
+            --accent-bg-light: rgba(168, 85, 247, 0.2); /* purple-500 with opacity (new) */
+            --card-bg: #171717; /* gray-900 */
+            --border-color: #4a0e4a; /* custom dark purple border */
+            --chart-line: #a855f7; /* purple-500 (new) */
+            --chart-fill: rgba(168, 85, 247, 0.2); /* purple-500 with opacity (new) */
+            --chart-point: #a21caf; /* fuchsia-700 (new) */
+            --chart-grid: #2d0c2d; /* custom dark purple grid */
+            --tooltip-bg: #2d0c2d;
+            --tooltip-title: #a855f7; /* purple-500 (new) */
+            --tooltip-body: #d8b4fe;
+            --button-bg: #a855f7; /* purple-500 (new) */
+            --button-text: #171717;
+            --button-hover-bg: #9333ea; /* purple-600 (new) */
+            --danger-color: #ef4444; /* red-500 */
+            --success-color: #22c55e; /* green-500 */
+        }
+
+        /* Apply variables to Tailwind-like classes */
+        .bg-theme-primary { background-color: var(--bg-primary); }
+        .text-theme-primary { color: var(--text-primary); }
+        .text-theme-secondary { color: var(--text-secondary); }
+        .bg-theme-card { background-color: var(--card-bg); }
+        .border-theme-default { border-color: var(--border-color); }
+        .text-theme-accent { color: var(--accent-color); }
+        .bg-theme-accent-light { background-color: var(--accent-bg-light); }
+        .bg-theme-button { background-color: var(--button-bg); }
+        .text-theme-button { color: var(--button-text); }
+        .hover\:bg-theme-button-hover:hover { background-color: var(--button-hover-bg); }
+        .text-theme-danger { color: var(--danger-color); }
+        .text-theme-success { color: var(--success-color); }
+
+        /* Specific overrides for certain elements */
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .container, .header, .nav, .day-card, .weekly-details, .strength-details, .cardio-section, .progress-section {
+            background-color: var(--card-bg);
+            border-color: var(--border-color);
+        }
+        .tab-active { border-color: var(--accent-color); color: var(--accent-color); background-color: var(--accent-bg-light); }
+        .tab-inactive { border-color: transparent; color: var(--text-secondary); }
+        .day-card-active { border-color: var(--accent-color); }
+        .toggle-checkbox:checked + .toggle-label { background-color: var(--accent-color); }
         .toggle-checkbox:checked + .toggle-label .toggle-ball { transform: translateX(100%); }
+        .focus\:ring-theme-accent:focus { --tw-ring-color: var(--accent-color); }
+        .focus\:border-theme-accent:focus { border-color: var(--accent-color); }
+        .text-sm-light { color: var(--text-secondary); } /* for small text that needs to be lighter */
+        .text-xs-accent { color: var(--accent-color); } /* for small accent text */
+        .bg-input-field { background-color: var(--bg-primary); } /* for input fields */
+        .border-input-field { border-color: var(--border-color); } /* for input fields */
+        .placeholder-theme-secondary::placeholder { color: var(--text-secondary); }
     </style>
 </head>
-<body class="bg-stone-50 text-stone-800">
+<body class="light-theme bg-theme-primary text-theme-primary">
 
     <div class="container mx-auto p-4 md:p-8 max-w-7xl">
         <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold text-stone-900">Plan de Entrenamiento Interactivo</h1>
-            <p class="text-stone-600 mt-2 text-lg">Tu guía completa de fuerza y cardio. Selecciona una sección para comenzar.</p>
+            <div class="flex justify-end mb-4">
+                <button id="theme-toggle" class="px-4 py-2 rounded-full bg-theme-button text-theme-button hover:bg-theme-button-hover transition-colors duration-300 font-semibold text-sm">
+                    Cambiar Tema
+                </button>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-theme-primary">Plan de Entrenamiento Interactivo</h1>
+            <p class="text-theme-secondary mt-2 text-lg">Tu guía completa de fuerza y cardio. Selecciona una sección para comenzar.</p>
         </header>
 
-        <nav class="flex justify-center border-b border-stone-200 mb-8">
+        <nav class="flex justify-center border-b border-theme-default mb-8">
             <button id="btn-weekly" class="flex-1 sm:flex-none text-center font-semibold py-3 px-6 border-b-2 transition-all duration-300 tab-active">🗓️ Plan Semanal</button>
             <button id="btn-strength" class="flex-1 sm:flex-none text-center font-semibold py-3 px-6 border-b-2 transition-all duration-300 tab-inactive">💪 Rutina de Fuerza</button>
             <button id="btn-cardio" class="flex-1 sm:flex-none text-center font-semibold py-3 px-6 border-b-2 transition-all duration-300 tab-inactive">🏃‍♂️ Guía de Cardio</button>
@@ -35,53 +117,53 @@
 
         <main>
             <div id="view-weekly">
-                 <div class="text-center mb-8 p-6 bg-white rounded-2xl shadow-sm border border-stone-200">
-                    <h2 class="text-2xl font-bold text-stone-800 mb-2">Tu Semana de Entrenamiento</h2>
-                    <p class="text-stone-600 max-w-3xl mx-auto">Aquí tienes un resumen de tu plan de entrenamiento para toda la semana. Haz clic en cualquier día para ver los detalles completos del entrenamiento de fuerza y las instrucciones específicas de cardio para esa sesión.</p>
+                 <div class="text-center mb-8 p-6 bg-theme-card rounded-2xl shadow-sm border border-theme-default">
+                    <h2 class="text-2xl font-bold text-theme-primary mb-2">Tu Semana de Entrenamiento</h2>
+                    <p class="text-theme-secondary max-w-3xl mx-auto">Aquí tienes un resumen de tu plan de entrenamiento para toda la semana. Haz clic en cualquier día para ver los detalles completos del entrenamiento de fuerza y las instrucciones específicas de cardio para esa sesión.</p>
                 </div>
                 <div id="weekly-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4 mb-8"></div>
-                <div id="weekly-details" class="bg-white p-6 rounded-2xl shadow-lg border border-stone-200 min-h-[200px] transition-all duration-500">
-                    <p class="text-center text-stone-500">Selecciona un día para ver los detalles aquí.</p>
+                <div id="weekly-details" class="bg-theme-card p-6 rounded-2xl shadow-lg border border-theme-default min-h-[200px] transition-all duration-500">
+                    <p class="text-theme-secondary text-center">Selecciona un día para ver los detalles aquí.</p>
                 </div>
             </div>
 
             <div id="view-strength" class="hidden">
-                <div class="text-center mb-8 p-6 bg-white rounded-2xl shadow-sm border border-stone-200">
-                    <h2 class="text-2xl font-bold text-stone-800 mb-2">Explora tus Rutinas de Fuerza</h2>
-                    <p class="text-stone-600 max-w-3xl mx-auto">Elige un día de entrenamiento para ver los ejercicios. Puedes usar el interruptor para cambiar entre la rutina del gimnasio y la alternativa para hacer en casa.</p>
+                <div class="text-center mb-8 p-6 bg-theme-card rounded-2xl shadow-sm border border-theme-default">
+                    <h2 class="text-2xl font-bold text-theme-primary mb-2">Explora tus Rutinas de Fuerza</h2>
+                    <p class="text-theme-secondary max-w-3xl mx-auto">Elige un día de entrenamiento para ver los ejercicios. Puedes usar el interruptor para cambiar entre la rutina del gimnasio y la alternativa para hacer en casa.</p>
                 </div>
                 <div class="flex flex-col md:flex-row gap-8">
                     <div class="md:w-1/3">
                         <div class="flex justify-between items-center mb-4">
-                             <h3 class="text-xl font-bold text-stone-800">Modo de Entrenamiento</h3>
+                             <h3 class="text-xl font-bold text-theme-primary">Modo de Entrenamiento</h3>
                              <div class="flex items-center cursor-pointer">
-                                <span class="mr-3 font-semibold text-stone-600">Gimnasio</span>
+                                <span class="mr-3 font-semibold text-theme-secondary">Gimnasio</span>
                                 <input type="checkbox" id="mode-toggle" class="toggle-checkbox hidden">
-                                <label for="mode-toggle" class="toggle-label flex items-center h-6 w-12 rounded-full bg-stone-300 p-1 transition-colors duration-300">
+                                <label for="mode-toggle" class="toggle-label flex items-center h-6 w-12 rounded-full bg-theme-default p-1 transition-colors duration-300">
                                     <div class="toggle-ball h-4 w-4 rounded-full bg-white shadow-md transform transition-transform duration-300"></div>
                                 </label>
-                                <span class="ml-3 font-semibold text-stone-600">En Casa</span>
+                                <span class="ml-3 font-semibold text-theme-secondary">En Casa</span>
                             </div>
                         </div>
                         <div id="strength-days" class="flex flex-col gap-2"></div>
                     </div>
-                    <div id="strength-details" class="md:w-2/3 bg-white p-6 rounded-2xl shadow-lg border border-stone-200">
-                         <p class="text-center text-stone-500">Selecciona un día para ver los ejercicios.</p>
+                    <div id="strength-details" class="bg-theme-card md:w-2/3 p-6 rounded-2xl shadow-lg border border-theme-default">
+                         <p class="text-theme-secondary text-center">Selecciona un día para ver los ejercicios.</p>
                     </div>
                 </div>
             </div>
 
             <div id="view-cardio" class="hidden">
-                 <div class="text-center mb-8 p-6 bg-white rounded-2xl shadow-sm border border-stone-200">
-                    <h2 class="text-2xl font-bold text-stone-800 mb-2">Tu Guía Esencial de Cardio</h2>
-                    <p class="text-stone-600 max-w-3xl mx-auto">Esta sección detalla la estrategia de cardio diseñada para maximizar la quema de grasa sin comprometer tu recuperación muscular. Incluye una visualización de la progresión de velocidad recomendada.</p>
+                 <div class="text-center mb-8 p-6 bg-theme-card rounded-2xl shadow-sm border border-theme-default">
+                    <h2 class="text-2xl font-bold text-theme-primary mb-2">Tu Guía Esencial de Cardio</h2>
+                    <p class="text-theme-secondary max-w-3xl mx-auto">Esta sección detalla la estrategia de cardio diseñada para maximizar la quema de grasa sin comprometer tu recuperación muscular. Incluye una visualización de la progresión de velocidad recomendada.</p>
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-stone-200">
-                        <h3 class="font-bold text-xl mb-4 text-stone-800">Estrategia y Recomendaciones</h3>
-                        <div class="space-y-4 text-stone-700">
+                    <div class="bg-theme-card p-6 rounded-2xl shadow-lg border border-theme-default">
+                        <h3 class="font-bold text-xl mb-4 text-theme-primary">Estrategia y Recomendaciones</h3>
+                        <div class="space-y-4 text-theme-secondary">
                             <div>
-                                <h4 class="font-semibold text-amber-600">Contexto General</h4>
+                                <h4 class="font-semibold text-theme-accent">Contexto General</h4>
                                 <ul class="list-disc list-inside mt-1 space-y-1">
                                     <li>Tu caminata diaria al gimnasio (~1.6 km) ya es un excelente cardio base.</li>
                                     <li>El objetivo es quemar grasa sin afectar la recuperación ni la masa muscular.</li>
@@ -89,7 +171,7 @@
                                 </ul>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-amber-600">Cardio Principal: LISS Inclinado</h4>
+                                <h4 class="font-semibold text-theme-accent">Cardio Principal: LISS Inclinado</h4>
                                 <ul class="list-disc list-inside mt-1 space-y-1">
                                     <li><span class="font-bold">Qué es:</span> Cardio moderado en caminadora con 15% de inclinación.</li>
                                     <li><span class="font-bold">Duración:</span> 15 a 20 minutos post-entrenamiento.</li>
@@ -97,7 +179,7 @@
                                 </ul>
                             </div>
                              <div>
-                                <h4 class="font-semibold text-amber-600">Recomendaciones Finales</h4>
+                                <h4 class="font-semibold text-theme-accent">Recomendaciones Finales</h4>
                                 <ul class="list-disc list-inside mt-1 space-y-1">
                                     <li>Limita el cardio extra a 3-4 veces por semana para una recuperación óptima.</li>
                                     <li>Escucha a tu cuerpo: si sientes fatiga, reduce la velocidad o la duración.</li>
@@ -106,9 +188,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-stone-200">
-                        <h3 class="font-bold text-xl mb-4 text-stone-800">Progresión de Velocidad Visualizada</h3>
-                        <p class="text-stone-600 mb-4">Este gráfico muestra el aumento progresivo de la velocidad durante una sesión de 20 minutos en la caminadora con 15% de inclinación. Pasa el cursor sobre los puntos para ver los detalles.</p>
+                    <div class="bg-theme-card p-6 rounded-2xl shadow-lg border border-theme-default">
+                        <h3 class="font-bold text-xl mb-4 text-theme-primary">Progresión de Velocidad Visualizada</h3>
+                        <p class="text-theme-secondary mb-4">Este gráfico muestra el aumento progresivo de la velocidad durante una sesión de 20 minutos en la caminadora con 15% de inclinación. Pasa el cursor sobre los puntos para ver los detalles.</p>
                         <div class="chart-container relative h-80 md:h-96 w-full max-w-xl mx-auto">
                             <canvas id="cardioChart"></canvas>
                         </div>
@@ -117,45 +199,45 @@
             </div>
 
             <div id="view-progress" class="hidden">
-                <div class="text-center mb-8 p-6 bg-white rounded-2xl shadow-sm border border-stone-200">
-                    <h2 class="text-2xl font-bold text-stone-800 mb-2">Tu Progreso en el Tiempo</h2>
-                    <p class="text-stone-600 max-w-3xl mx-auto">Registra tus métricas clave y visualiza tus avances. Puedes añadir nuevas entradas y seleccionar qué métrica quieres ver en el gráfico.</p>
+                <div class="text-center mb-8 p-6 bg-theme-card rounded-2xl shadow-sm border border-theme-default">
+                    <h2 class="text-2xl font-bold text-theme-primary mb-2">Tu Progreso en el Tiempo</h2>
+                    <p class="text-theme-secondary max-w-3xl mx-auto">Registra tus métricas clave y visualiza tus avances. Puedes añadir nuevas entradas y seleccionar qué métrica quieres ver en el gráfico.</p>
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-stone-200">
-                        <h3 class="font-bold text-xl mb-4 text-stone-800">Añadir Nueva Entrada</h3>
+                    <div class="bg-theme-card p-6 rounded-2xl shadow-lg border border-theme-default">
+                        <h3 class="font-bold text-xl mb-4 text-theme-primary">Añadir Nueva Entrada</h3>
                         <form id="progress-form" class="space-y-4">
                             <div>
-                                <label for="progress-date" class="block text-sm font-medium text-stone-700 mb-1">Fecha:</label>
-                                <input type="date" id="progress-date" class="w-full p-2 border border-stone-300 rounded-md focus:ring-amber-500 focus:border-amber-500" required>
+                                <label for="progress-date" class="block text-sm font-medium text-theme-secondary mb-1">Fecha:</label>
+                                <input type="date" id="progress-date" class="w-full p-2 bg-input-field border border-input-field rounded-md focus:ring-theme-accent focus:border-theme-accent placeholder-theme-secondary" required>
                             </div>
                             <div>
-                                <label for="progress-metric" class="block text-sm font-medium text-stone-700 mb-1">Métrica:</label>
-                                <select id="progress-metric" class="w-full p-2 border border-stone-300 rounded-md focus:ring-amber-500 focus:border-amber-500">
+                                <label for="progress-metric" class="block text-sm font-medium text-theme-secondary mb-1">Métrica:</label>
+                                <select id="progress-metric" class="w-full p-2 bg-input-field border border-input-field rounded-md focus:ring-theme-accent focus:border-theme-accent">
                                     <option value="bodyWeight">Peso Corporal (kg)</option>
                                     <option value="benchPress">Press de Banca (kg)</option>
                                 </select>
                             </div>
                             <div>
-                                <label for="progress-value" class="block text-sm font-medium text-stone-700 mb-1">Valor:</label>
-                                <input type="number" id="progress-value" class="w-full p-2 border border-stone-300 rounded-md focus:ring-amber-500 focus:border-amber-500" step="0.1" required>
+                                <label for="progress-value" class="block text-sm font-medium text-theme-secondary mb-1">Valor:</label>
+                                <input type="number" id="progress-value" class="w-full p-2 bg-input-field border border-input-field rounded-md focus:ring-theme-accent focus:border-theme-accent placeholder-theme-secondary" step="0.1" required>
                             </div>
                             <div class="flex items-center">
-                                <input type="checkbox" id="did-cardio" class="h-4 w-4 text-amber-600 border-stone-300 rounded focus:ring-amber-500">
-                                <label for="did-cardio" class="ml-2 block text-sm text-stone-900">Hice Cardio</label>
+                                <input type="checkbox" id="did-cardio" class="h-4 w-4 text-theme-accent border-input-field rounded focus:ring-theme-accent">
+                                <label for="did-cardio" class="ml-2 block text-sm text-theme-primary">Hice Cardio</label>
                             </div>
                             <div class="flex items-center">
-                                <input type="checkbox" id="did-training" class="h-4 w-4 text-amber-600 border-stone-300 rounded focus:ring-amber-500">
-                                <label for="did-training" class="ml-2 block text-sm text-stone-900">Hice Entrenamiento</label>
+                                <input type="checkbox" id="did-training" class="h-4 w-4 text-theme-accent border-input-field rounded focus:ring-theme-accent">
+                                <label for="did-training" class="ml-2 block text-sm text-theme-primary">Hice Entrenamiento</label>
                             </div>
-                            <button type="submit" class="w-full bg-amber-600 text-white py-2 px-4 rounded-md hover:bg-amber-700 transition-colors duration-300 font-semibold">Añadir Progreso</button>
+                            <button type="submit" class="w-full bg-theme-button text-theme-button py-2 px-4 rounded-md hover:bg-theme-button-hover transition-colors duration-300 font-semibold">Añadir Progreso</button>
                         </form>
                     </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-stone-200">
-                        <h3 class="font-bold text-xl mb-4 text-stone-800">Visualizar Progreso</h3>
+                    <div class="bg-theme-card p-6 rounded-2xl shadow-lg border border-theme-default">
+                        <h3 class="font-bold text-xl mb-4 text-theme-primary">Visualizar Progreso</h3>
                         <div class="mb-4">
-                            <label for="chart-metric-selector" class="block text-sm font-medium text-stone-700 mb-1">Mostrar métrica:</label>
-                            <select id="chart-metric-selector" class="w-full p-2 border border-stone-300 rounded-md focus:ring-amber-500 focus:border-amber-500">
+                            <label for="chart-metric-selector" class="block text-sm font-medium text-theme-secondary mb-1">Mostrar métrica:</label>
+                            <select id="chart-metric-selector" class="w-full p-2 bg-input-field border border-input-field rounded-md focus:ring-theme-accent focus:border-theme-accent">
                                 <option value="bodyWeight">Peso Corporal (kg)</option>
                                 <option value="benchPress">Press de Banca (kg)</option>
                             </select>
@@ -165,45 +247,45 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-lg border border-stone-200 mt-8">
-                    <h3 class="font-bold text-xl mb-4 text-stone-800">Historial de Progreso</h3>
+                <div class="bg-theme-card p-6 rounded-2xl shadow-lg border border-theme-default mt-8">
+                    <h3 class="font-bold text-xl mb-4 text-theme-primary">Historial de Progreso</h3>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-stone-200">
-                            <thead class="bg-stone-50">
+                        <table class="min-w-full divide-y divide-theme-default">
+                            <thead class="bg-theme-primary">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Fecha</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Métrica</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Valor</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Cardio</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Entrenamiento</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Acciones</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-theme-secondary uppercase tracking-wider">Fecha</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-theme-secondary uppercase tracking-wider">Métrica</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-theme-secondary uppercase tracking-wider">Valor</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-theme-secondary uppercase tracking-wider">Cardio</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-theme-secondary uppercase tracking-wider">Entrenamiento</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-theme-secondary uppercase tracking-wider">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="progress-table-body" class="bg-white divide-y divide-stone-200">
-                                <tr><td colspan="6" class="text-center py-4 text-stone-500">No hay datos de progreso aún.</td></tr>
+                            <tbody id="progress-table-body" class="bg-theme-card divide-y divide-theme-default">
+                                <tr><td colspan="6" class="text-center py-4 text-theme-secondary">No hay datos de progreso aún.</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl shadow-lg border border-stone-200 mt-8">
-                    <h3 class="font-bold text-xl mb-4 text-stone-800">Resumen de Progreso</h3>
+                <div class="bg-theme-card p-6 rounded-2xl shadow-lg border border-theme-default mt-8">
+                    <h3 class="font-bold text-xl mb-4 text-theme-primary">Resumen de Progreso</h3>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-stone-200">
-                            <thead class="bg-stone-50">
+                        <table class="min-w-full divide-y divide-theme-default">
+                            <thead class="bg-theme-primary">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Métrica</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Inicio</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Actual</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Cambio</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-theme-secondary uppercase tracking-wider">Métrica</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-theme-secondary uppercase tracking-wider">Inicio</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-theme-secondary uppercase tracking-wider">Actual</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-theme-secondary uppercase tracking-wider">Cambio</th>
                                 </tr>
                             </thead>
-                            <tbody id="progress-summary-body" class="bg-white divide-y divide-stone-200">
-                                <tr><td colspan="4" class="text-center py-4 text-stone-500">No hay datos para el resumen.</td></tr>
+                            <tbody id="progress-summary-body" class="bg-theme-card divide-y divide-theme-default">
+                                <tr><td colspan="4" class="text-center py-4 text-theme-secondary">No hay datos para el resumen.</td></tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="mt-4 text-stone-700">
+                    <div class="mt-4 text-theme-secondary">
                         <p><span class="font-semibold">Días con Cardio Registrado:</span> <span id="total-cardio-days">0</span></p>
                         <p><span class="font-semibold">Días con Entrenamiento Registrado:</span> <span id="total-training-days">0</span></p>
                     </div>
@@ -270,6 +352,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressSummaryBody = document.getElementById('progress-summary-body');
     const totalCardioDaysSpan = document.getElementById('total-cardio-days');
     const totalTrainingDaysSpan = document.getElementById('total-training-days');
+    const themeToggleButton = document.getElementById('theme-toggle');
+    const body = document.body;
 
     let activeView = 'weekly';
     let activeStrengthDay = 'day1';
@@ -288,13 +372,20 @@ document.addEventListener('DOMContentLoaded', () => {
         buttons[viewName].classList.replace('tab-inactive', 'tab-active');
         activeView = viewName;
 
-        if(viewName === 'cardio' && !cardioChartInstance) {
+        if(viewName === 'cardio') {
             renderCardioChart();
+        } else if (cardioChartInstance) {
+            cardioChartInstance.destroy();
+            cardioChartInstance = null;
         }
+
         if(viewName === 'progress') {
             renderProgressTable();
             renderProgressChart();
             renderProgressSummary();
+        } else if (progressChartInstance) {
+            progressChartInstance.destroy();
+            progressChartInstance = null;
         }
     }
 
@@ -303,17 +394,17 @@ document.addEventListener('DOMContentLoaded', () => {
         data.weeklyPlan.forEach((item, index) => {
             const routine = item.routineKey ? data.routines[item.routineKey] : { name: 'Descanso', icon: '😴' };
             const card = document.createElement('div');
-            card.className = 'day-card p-4 bg-white rounded-xl shadow-md cursor-pointer border-2 border-transparent hover:border-amber-400 hover:shadow-lg transition-all duration-300';
+            card.className = 'day-card p-4 bg-theme-card rounded-xl shadow-md cursor-pointer border-2 border-theme-default hover:border-theme-accent hover:shadow-lg transition-all duration-300';
             card.dataset.dayIndex = index;
             card.innerHTML = `
                 <div class="flex items-center mb-2">
                     <span class="text-2xl mr-3">${routine.icon}</span>
                     <div>
-                        <p class="font-bold text-stone-800">${item.day}</p>
-                        <p class="text-sm text-stone-600">${routine.name}</p>
+                        <p class="font-bold text-theme-primary">${item.day}</p>
+                        <p class="text-sm text-theme-secondary">${routine.name}</p>
                     </div>
                 </div>
-                <p class="text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-1 inline-block">${item.routineKey ? 'Entrenamiento + Cardio' : 'Descanso'}</p>
+                <p class="text-xs-accent bg-theme-accent-light rounded-full px-2 py-1 inline-block">${item.routineKey ? 'Entrenamiento + Cardio' : 'Descanso'}</p>
             `;
             card.addEventListener('click', () => {
                 renderWeeklyDetails(index);
@@ -334,23 +425,23 @@ document.addEventListener('DOMContentLoaded', () => {
         let exercisesHtml = '';
         if (routine) {
             exercisesHtml = routine.gym.map(ex => `
-                <li class="flex justify-between items-center py-2 border-b border-stone-100">
-                    <span class="text-stone-700">${ex.e}</span>
-                    <span class="font-semibold text-stone-800 bg-stone-100 rounded-md px-2 py-1 text-sm">${ex.s}</span>
+                <li class="flex justify-between items-center py-2 border-b border-theme-default">
+                    <span class="text-theme-secondary">${ex.e}</span>
+                    <span class="font-semibold text-theme-primary bg-theme-accent-light rounded-md px-2 py-1 text-sm">${ex.s}</span>
                 </li>
             `).join('');
         }
 
         weeklyDetails.innerHTML = `
-            <h3 class="font-bold text-2xl text-stone-800 mb-4">${item.day}: ${routine ? routine.name : 'Descanso'}</h3>
+            <h3 class="font-bold text-2xl text-theme-primary mb-4">${item.day}: ${routine ? routine.name : 'Descanso'}</h3>
             ${routine ? `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <h4 class="font-semibold text-lg text-amber-600 mb-2">🏋️‍♀️ Entrenamiento de Fuerza (Gym)</h4>
+                    <h4 class="font-semibold text-lg text-theme-accent mb-2">🏋️‍♀️ Entrenamiento de Fuerza (Gym)</h4>
                     <ul class="space-y-1">${exercisesHtml}</ul>
                 </div>` : ''}
                 <div>
-                     <h4 class="font-semibold text-lg text-amber-600 mb-2">${routine ? '🏃‍♂️ Cardio del Día' : '🧘‍♀️ Actividad del Día'}</h4>
-                     <p class="text-stone-700 bg-amber-50 p-4 rounded-lg">${item.cardio}</p>
+                     <h4 class="font-semibold text-lg text-theme-accent mb-2">${routine ? '🏃‍♂️ Cardio del Día' : '🧘‍♀️ Actividad del Día'}</h4>
+                     <p class="text-theme-secondary bg-theme-accent-light p-4 rounded-lg">${item.cardio}</p>
                 </div>
             </div>
         `;
@@ -361,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.keys(data.routines).forEach(key => {
             const routine = data.routines[key];
             const button = document.createElement('button');
-            button.className = `w-full p-3 text-left rounded-lg transition-colors duration-200 ${key === activeStrengthDay ? 'bg-amber-100 text-amber-800 font-bold' : 'hover:bg-stone-100'}`;
+            button.className = `w-full p-3 text-left rounded-lg transition-colors duration-200 ${key === activeStrengthDay ? 'bg-theme-accent-light text-theme-accent font-bold' : 'hover:bg-theme-accent-light text-theme-primary'}`;
             button.dataset.dayKey = key;
             button.innerHTML = `<span class="text-xl mr-3">${routine.icon}</span> ${routine.name}`;
             button.addEventListener('click', () => {
@@ -379,15 +470,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const exercises = routine[mode];
 
         const exercisesHtml = exercises.map(ex => `
-            <li class="flex justify-between items-center py-3 border-b border-stone-100">
-                <span class="text-stone-700">${ex.e}</span>
-                <span class="font-semibold text-stone-800 bg-stone-100 rounded-md px-3 py-1 text-sm">${ex.s}</span>
+            <li class="flex justify-between items-center py-3 border-b border-theme-default">
+                <span class="text-theme-secondary">${ex.e}</span>
+                <span class="font-semibold text-theme-primary bg-theme-accent-light rounded-md px-3 py-1 text-sm">${ex.s}</span>
             </li>
         `).join('');
 
         strengthDetails.innerHTML = `
-            <h3 class="font-bold text-2xl text-stone-800 mb-1">${routine.name}</h3>
-            <p class="text-amber-600 font-semibold mb-4">Modo: ${mode === 'gym' ? 'Gimnasio' : 'En Casa'}</p>
+            <h3 class="font-bold text-2xl text-theme-primary mb-1">${routine.name}</h3>
+            <p class="text-theme-accent font-semibold mb-4">Modo: ${mode === 'gym' ? 'Gimnasio' : 'En Casa'}</p>
             <ul class="space-y-2">${exercisesHtml}</ul>
         `;
     }
@@ -404,14 +495,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets: [{
                     label: 'Velocidad (km/h)',
                     data: data.cardioProgression.data,
-                    borderColor: '#f59e0b',
-                    backgroundColor: '#fffbeb',
+                    borderColor: getComputedStyle(document.body).getPropertyValue('--chart-line'),
+                    backgroundColor: getComputedStyle(document.body).getPropertyValue('--chart-fill'),
                     fill: true,
                     tension: 0.3,
-                    pointBackgroundColor: '#c2410c',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#c2410c',
+                    pointBackgroundColor: getComputedStyle(document.body).getPropertyValue('--chart-point'),
+                    pointBorderColor: getComputedStyle(document.body).getPropertyValue('--card-bg'),
+                    pointHoverBackgroundColor: getComputedStyle(document.body).getPropertyValue('--card-bg'),
+                    pointHoverBorderColor: getComputedStyle(document.body).getPropertyValue('--chart-point'),
                     pointRadius: 5,
                     pointHoverRadius: 8,
                 }]
@@ -423,9 +514,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     legend: { display: false },
                     tooltip: {
                         enabled: true,
-                        backgroundColor: '#1c1917',
-                        titleColor: '#fde68a',
-                        bodyColor: '#e7e5e4',
+                        backgroundColor: getComputedStyle(document.body).getPropertyValue('--tooltip-bg'),
+                        titleColor: getComputedStyle(document.body).getPropertyValue('--tooltip-title'),
+                        bodyColor: getComputedStyle(document.body).getPropertyValue('--tooltip-body'),
                         padding: 12,
                         cornerRadius: 8,
                         callbacks: {
@@ -445,11 +536,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        title: { display: true, text: 'Velocidad (km/h)', color: '#57534e' },
-                        grid: { color: '#f5f5f4' }
+                        title: { display: true, text: 'Velocidad (km/h)', color: getComputedStyle(document.body).getPropertyValue('--text-secondary') },
+                        grid: { color: getComputedStyle(document.body).getPropertyValue('--chart-grid') }
                     },
                     x: {
-                        title: { display: true, text: 'Tiempo (Minutos)', color: '#57534e' },
+                        title: { display: true, text: 'Tiempo (Minutos)', color: getComputedStyle(document.body).getPropertyValue('--text-secondary') },
                         grid: { display: false }
                     }
                 }
@@ -460,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderProgressTable() {
         progressTableBody.innerHTML = '';
         if (data.progressEntries.length === 0) {
-            progressTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-stone-500">No hay datos de progreso aún.</td></tr>';
+            progressTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-theme-secondary">No hay datos de progreso aún.</td></tr>';
             return;
         }
 
@@ -469,13 +560,13 @@ document.addEventListener('DOMContentLoaded', () => {
         sortedEntries.forEach((entry, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-700">${entry.date}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-700">${entry.type === 'bodyWeight' ? 'Peso Corporal' : 'Press de Banca'}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-700">${entry.value} ${entry.type === 'bodyWeight' ? 'kg' : 'kg'}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-700">${entry.didCardio ? 'Sí' : 'No'}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-700">${entry.didTraining ? 'Sí' : 'No'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-theme-secondary">${entry.date}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-theme-secondary">${entry.type === 'bodyWeight' ? 'Peso Corporal' : 'Press de Banca'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-theme-secondary">${entry.value} ${entry.type === 'bodyWeight' ? 'kg' : 'kg'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-theme-secondary">${entry.didCardio ? 'Sí' : 'No'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-theme-secondary">${entry.didTraining ? 'Sí' : 'No'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button class="text-red-600 hover:text-red-900" data-index="${index}">Eliminar</button>
+                    <button class="text-theme-danger hover:text-theme-danger-dark" data-index="${index}">Eliminar</button>
                 </td>
             `;
             progressTableBody.appendChild(row);
@@ -520,14 +611,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets: [{
                     label: `${title} (${unit})`,
                     data: values,
-                    borderColor: '#f59e0b',
-                    backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                    borderColor: getComputedStyle(document.body).getPropertyValue('--chart-line'),
+                    backgroundColor: getComputedStyle(document.body).getPropertyValue('--chart-fill'),
                     fill: true,
                     tension: 0.3,
-                    pointBackgroundColor: '#c2410c',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#c2410c',
+                    pointBackgroundColor: getComputedStyle(document.body).getPropertyValue('--chart-point'),
+                    pointBorderColor: getComputedStyle(document.body).getPropertyValue('--card-bg'),
+                    pointHoverBackgroundColor: getComputedStyle(document.body).getPropertyValue('--card-bg'),
+                    pointHoverBorderColor: getComputedStyle(document.body).getPropertyValue('--chart-point'),
                     pointRadius: 5,
                     pointHoverRadius: 8,
                 }]
@@ -539,9 +630,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     legend: { display: false },
                     tooltip: {
                         enabled: true,
-                        backgroundColor: '#1c1917',
-                        titleColor: '#fde68a',
-                        bodyColor: '#e7e5e4',
+                        backgroundColor: getComputedStyle(document.body).getPropertyValue('--tooltip-bg'),
+                        titleColor: getComputedStyle(document.body).getPropertyValue('--tooltip-title'),
+                        bodyColor: getComputedStyle(document.body).getPropertyValue('--tooltip-body'),
                         padding: 12,
                         cornerRadius: 8,
                         callbacks: {
@@ -557,11 +648,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 scales: {
                     y: {
                         beginAtZero: false,
-                        title: { display: true, text: `${title} (${unit})`, color: '#57534e' },
-                        grid: { color: '#f5f5f4' }
+                        title: { display: true, text: `${title} (${unit})`, color: getComputedStyle(document.body).getPropertyValue('--text-secondary') },
+                        grid: { color: getComputedStyle(document.body).getPropertyValue('--chart-grid') }
                     },
                     x: {
-                        title: { display: true, text: 'Fecha', color: '#57534e' },
+                        title: { display: true, text: 'Fecha', color: getComputedStyle(document.body).getPropertyValue('--text-secondary') },
                         grid: { display: false }
                     }
                 }
@@ -586,7 +677,7 @@ document.addEventListener('DOMContentLoaded', () => {
         progressSummaryBody.innerHTML = '';
 
         if (bodyWeightEntries.length === 0 && benchPressEntries.length === 0) {
-            progressSummaryBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-stone-500">No hay datos para el resumen.</td></tr>';
+            progressSummaryBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-theme-secondary">No hay datos para el resumen.</td></tr>';
             return;
         }
 
@@ -601,18 +692,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 const lastValue = metric.entries[metric.entries.length - 1].value;
                 const change = (lastValue - firstValue).toFixed(1);
                 const changeDisplay = change > 0 ? `+${change}` : change;
-                const changeColor = change > 0 ? 'text-green-600' : (change < 0 ? 'text-red-600' : 'text-stone-700');
+                const changeColor = change > 0 ? 'text-theme-success' : (change < 0 ? 'text-theme-danger' : 'text-theme-secondary');
 
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-stone-900">${metric.name}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-700">${firstValue} ${metric.unit}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-700">${lastValue} ${metric.unit}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-theme-primary">${metric.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-theme-secondary">${firstValue} ${metric.unit}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-theme-secondary">${lastValue} ${metric.unit}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold ${changeColor}">${changeDisplay} ${metric.unit}</td>
                 `;
                 progressSummaryBody.appendChild(row);
             }
         });
+    }
+
+    function setTheme(themeName) {
+        body.classList.remove('light-theme', 'dark-theme');
+        body.classList.add(themeName);
+        localStorage.setItem('theme', themeName);
+        // Re-render charts to apply new theme colors
+        if (activeView === 'cardio') {
+            renderCardioChart();
+        }
+        if (activeView === 'progress') {
+            renderProgressChart();
+        }
     }
 
     buttons.weekly.addEventListener('click', () => switchView('weekly'));
@@ -649,7 +753,18 @@ document.addEventListener('DOMContentLoaded', () => {
         renderProgressChart();
     });
 
+    themeToggleButton.addEventListener('click', () => {
+        if (body.classList.contains('light-theme')) {
+            setTheme('dark-theme');
+        } else {
+            setTheme('light-theme');
+        }
+    });
+
     function init() {
+        const savedTheme = localStorage.getItem('theme') || 'light-theme';
+        setTheme(savedTheme);
+
         renderWeeklyPlan();
         renderStrengthDays();
         renderStrengthDetails();
