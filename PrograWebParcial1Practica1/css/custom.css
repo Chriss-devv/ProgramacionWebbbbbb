@@ -1,0 +1,89 @@
+/*
+ * Custom overrides for Zapatería Bicentenario
+ *
+ * Esta hoja de estilos define una apariencia consistente para todas las
+ * páginas del sitio web. Se inspira en los tonos cálidos del cuero y
+ * mantiene visible el menú en todo momento.  El fondo utiliza la
+ * textura proporcionada en la carpeta de imágenes.
+ */
+
+/* Fondo general que aplica a todo el cuerpo de cada página. La
+   imagen se fija para que el menú permanezca visible mientras se
+   desplaza el contenido. */
+body {
+    background-image: url('../assets/img/fondo.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #212529;
+}
+
+/* Permite preservar los saltos de línea y espacios en los textos
+   importados de los documentos de repaso. */
+.content-text {
+    white-space: pre-wrap;
+}
+
+/* Ajusta el tamaño de letra de las entradas del menú y reduce
+   el relleno para que la barra de navegación sea más compacta. */
+#mainNav .nav-link {
+    font-size: 0.65rem;
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+/* Permite que los elementos del menú se distribuyan en varias filas en
+   pantallas estrechas sin superponerse entre sí */
+#mainNav .navbar-nav {
+    flex-wrap: wrap;
+}
+
+/* Ajusta los colores de la marca y los enlaces para una mejor armonía con el tema de cuero */
+.navbar-light .navbar-brand {
+    color: #5D2E0E !important;
+    font-weight: bold;
+}
+.navbar-light .navbar-nav .nav-link {
+    color: #5D2E0E !important;
+}
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #7B3F1D !important;
+}
+
+/* Establece un tamaño por defecto para los iframes que cargan
+   contenido en la página principal. */
+#contentFrame {
+    width: 100%;
+    height: 70vh;
+    border: none;
+}
+
+/* Estiliza la barra de navegación para una apariencia más elegante.
+   Se utiliza un fondo claro inspirado en el cuero y una ligera sombra
+   para crear profundidad sobre las imágenes de cabecera. */
+#mainNav {
+    background-color: #FDF5E6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Convierte la zona de enlaces desplegados en un panel flotante más pequeño.
+   Cuando se pulsa el botón de menú, la lista aparece como un cuadro emergente
+   en la esquina superior derecha en lugar de ocupar todo el ancho. */
+#mainNav .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 250px;
+    background-color: #FDF5E6;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    display: none;
+}
+/* Muestra el menú cuando está desplegado */
+#mainNav .navbar-collapse.show {
+    display: block;
+}
